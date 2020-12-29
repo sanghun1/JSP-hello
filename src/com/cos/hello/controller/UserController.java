@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.cos.hello.comfig.DBConn;
+import com.cos.hello.config.DBConn;
 import com.cos.hello.dao.UsersDao;
 import com.cos.hello.model.Users;
 import com.cos.hello.service.UsersService;
@@ -39,6 +39,8 @@ public class UserController extends HttpServlet{
 	protected void doProcess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("FrontController 실행됨");
 		
+		// req.getParameter 함수 실행시 파싱하기 때문에
+		// 파싱전에 인코딩 해줘야 함. 
 		String gubun = req.getParameter("gubun"); // gubun 뒤 값 파싱
 //		String gubun = req.getRequestURI(); // hello/front
 		System.out.println(gubun);
@@ -52,6 +54,8 @@ public class UserController extends HttpServlet{
 	}
 	
 	private void route(String gubun, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		
 		UsersService usersService = new UsersService();
 		if(gubun.equals("login")) {
 			resp.sendRedirect("auth/login.jsp");

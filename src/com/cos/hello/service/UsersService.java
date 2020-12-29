@@ -10,28 +10,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.cos.hello.dao.UsersDao;
+import com.cos.hello.dto.JoinDto;
+import com.cos.hello.dto.LoginDto;
 import com.cos.hello.model.Users;
 import com.cos.hello.util.Script;
 
 public class UsersService {
 	
 	public void 로그인(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		
-		System.out.println("================loginProc===============");
-		
-		System.out.println(username);
-		System.out.println(password);
-		
-		System.out.println("================loginProc===============");
-		
-		Users user = Users.builder()
-				.username(username)
-				.password(password)
-				.build();
+		LoginDto loginDto = (LoginDto)req.getAttribute("dto");
 		UsersDao usersDao = new UsersDao(); // 싱글톤
-		Users userEntity = usersDao.login(user);
+		Users userEntity = usersDao.login(loginDto);
 		
 		if(userEntity != null) {
 			HttpSession session = req.getSession();
@@ -42,33 +31,14 @@ public class UsersService {
 			Script.href(resp, "index.jsp", "로그인 성공");
 		}
 		else {
-			PrintWriter out = resp.getWriter();
 			Script.back(resp, "로그인 실패");
 		}
 	}
 	
 	public void 회원가입(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		String email = req.getParameter("email");
-		
-		System.out.println("================joinProc===============");
-		
-		System.out.println(username);
-		System.out.println(password);
-		System.out.println(email);
-		
-		System.out.println("================joinProc===============");
-		
-		Users user = Users.builder()
-				.username(username)
-				.password(password)
-				.email(email)
-				.build();
-		
+		JoinDto joinDto = (JoinDto)req.getAttribute("dto");
 		UsersDao usersDao = new UsersDao(); // 싱글톤
-		int result = usersDao.insert(user);
+		int result = usersDao.insert(joinDto);
 		
 		if(result == 1) {
 			resp.sendRedirect("auth/login.jsp");

@@ -1,4 +1,4 @@
-package com.cos.hello.comfig;
+package com.cos.hello.config;
 
 import java.sql.Connection;
 import javax.naming.Context;

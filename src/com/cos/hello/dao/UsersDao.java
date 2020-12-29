@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.cos.hello.comfig.DBConn;
+import com.cos.hello.config.DBConn;
+import com.cos.hello.dto.JoinDto;
+import com.cos.hello.dto.LoginDto;
 import com.cos.hello.model.Users;
 
 public class UsersDao {
 	
-	public int insert(Users user) { // Users user 
+	public int insert(JoinDto joinDto) { // Users user 
 		StringBuffer sb = new StringBuffer(); // String 전용 컬렉션(동기화 동시접근 불가능)
 		sb.append("INSERT INTO users(username, password, email) ");
 		sb.append("VALUES(?,?,?)");
@@ -23,9 +25,9 @@ public class UsersDao {
 		Connection conn = DBConn.getInstance();
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, user.getUsername());
-			pstmt.setString(2, user.getPassword());
-			pstmt.setString(3, user.getEmail());
+			pstmt.setString(1, joinDto.getUsername());
+			pstmt.setString(2, joinDto.getPassword());
+			pstmt.setString(3, joinDto.getEmail());
 			int result = pstmt.executeUpdate(); // DML문장은 x.executeUpdate()
 			return result;
 		} catch (Exception e) {
@@ -36,7 +38,7 @@ public class UsersDao {
 		return -1;
 	}
 	
-	public Users login(Users user) {
+	public Users login(LoginDto loginDto) {
 
 		StringBuffer sb = new StringBuffer(); // String 전용 컬렉션(동기화 동시접근 불가능)
 		sb.append("SELECT id, username, email FROM users ");
@@ -48,8 +50,8 @@ public class UsersDao {
 	
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, user.getUsername());
-			pstmt.setString(2, user.getPassword());
+			pstmt.setString(1, loginDto.getUsername());
+			pstmt.setString(2, loginDto.getPassword());
 			ResultSet rs = pstmt.executeQuery();
 			if(rs.next()) {
 				Users userEntity = Users.builder()
